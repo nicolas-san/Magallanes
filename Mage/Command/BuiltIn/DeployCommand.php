@@ -34,8 +34,8 @@ class DeployCommand extends AbstractCommand implements RequiresEnvironment
     const DEFAULT_RELEASE_IS_ENABLED = false;
     const DEPLOY_STRATEGY_DISABLED = 'disabled';
     const DEPLOY_STRATEGY_RSYNC = 'rsync';
+    const DEPLOY_STRATEGY_RSYNC_LOCAL = 'rsync-local';
     const DEPLOY_STRATEGY_TARGZ = 'targz';
-    const DEPLOY_STRATEGY_TARGZ_LOCAL = 'targz-local';
     const DEPLOY_STRATEGY_GIT_REBASE = 'git-rebase';
     const DEPLOY_STRATEGY_GIT_REMOTE_CACHE = 'git-remote-cache';
     const DEPLOY_STRATEGY_GUESS = 'guess';
@@ -622,12 +622,12 @@ class DeployCommand extends AbstractCommand implements RequiresEnvironment
                 $deployStrategy = 'deployment/strategy/rsync';
                 break;
 
-            case self::DEPLOY_STRATEGY_TARGZ:
-                $deployStrategy = 'deployment/strategy/tar-gz';
+            case self::DEPLOY_STRATEGY_RSYNC_LOCAL:
+                $deployStrategy = 'deployment/strategy/rsync-local';
                 break;
 
-            case self::DEPLOY_STRATEGY_TARGZ_LOCAL:
-                $deployStrategy = 'deployment/strategy/tar-gz-local';
+            case self::DEPLOY_STRATEGY_TARGZ:
+                $deployStrategy = 'deployment/strategy/tar-gz';
                 break;
 
             case self::DEPLOY_STRATEGY_GIT_REBASE:

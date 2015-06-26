@@ -212,6 +212,7 @@ class Console
 
         $return = 1;
         $log = array();
+        self::log($command . ' 2>&1');
         exec(escapeshellcmd($command . ' 2>&1'), $log, $return);
         $log = implode(PHP_EOL, $log);
 
@@ -221,6 +222,7 @@ class Console
         self::$commandsOutput .= PHP_EOL . trim($log) . PHP_EOL;
 
         self::log($log);
+        self::log($return);
         self::log('---------------------------------');
 
         return !$return;

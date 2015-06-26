@@ -236,12 +236,17 @@ abstract class AbstractTask
      * @param string $command
      * @return string
      */
-    protected function getReleasesAwareCommand($command)
+    protected function getReleasesAwareCommand($command, $relative = true)
     {
         if ($this->getConfig()->release('enabled', false) === true) {
             $releasesDirectory = $this->getConfig()->release('directory', 'releases');
 
-            $deployToDirectory = $releasesDirectory . '/' . $this->getConfig()->getReleaseId();
+            if ($relative) {
+                $deployToDirectory = $releasesDirectory . '/' . $this->getConfig()->getReleaseId();
+            } else {
+                $deployToDirectory = rtrim($this->getConfig()->deployment('to'), '/') . '/' . $releasesDirectory . '/' . $this->getConfig()->getReleaseId();
+            }
+
             return 'cd ' . $deployToDirectory . ' && ' . $command;
         }
 
