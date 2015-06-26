@@ -23,16 +23,21 @@ abstract class BaseStrategyTaskAbstract extends AbstractTask implements IsReleas
     /**
      * Checks if there is an override underway
      *
+     * @param $remote bool Set if the code as to be executed on remote host or not
      * @return bool
      */
-    protected function checkOverrideRelease()
+    protected function checkOverrideRelease($remote = true)
     {
         $overrideRelease = $this->getParameter('overrideRelease', false);
         $symlink = $this->getConfig()->release('symlink', 'current');
 
         if ($overrideRelease === true) {
             $releaseToOverride = false;
-            $resultFetch = $this->runCommandRemote('ls -ld ' . $symlink . ' | cut -d"/" -f2', $releaseToOverride);
+            if ($remote) {
+                $resultFetch = $this->runCommandRemote('ls -ld ' . $symlink . ' | cut -d"/" -f2', $releaseToOverride);
+            } else {
+                $resultFetch = $this->runCommandLocal('ls -ld ' . $symlink . ' | cut -d"/" -f2', $releaseToOverride);
+            }
             if ($resultFetch && is_numeric($releaseToOverride)) {
                 $this->getConfig()->setReleaseId($releaseToOverride);
             }
