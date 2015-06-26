@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the Magallanes package.
+* This file is part of the Magallanes package.
 *
 * (c) Andrés Montañez <andres@andresmontanez.com>
 *
@@ -97,6 +97,7 @@ class RsyncLocalTask extends BaseStrategyTaskAbstract implements IsReleaseAware
         $command = 'rsync -avz '
                  . $strategyFlags . ' '
                  . $this->excludes($excludes) . ' '
+                 . $this->getConfig()->deployment('from') . ' '
                  . $this->excludesListFile($excludesListFilePath) . ' ' .$deployToDirectory;
 
         $result = $this->runCommandLocal($command);
