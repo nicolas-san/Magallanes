@@ -205,15 +205,21 @@ class Console
      * @param string $output
      * @return boolean
      */
-    public static function executeCommand($command, &$output = null)
+    public static function executeCommand($command, &$output = null, $remote = true)
     {
         self::log('---------------------------------');
         self::log('---- Executing: $ ' . $command);
 
         $return = 1;
         $log = array();
-        self::log($command . ' 2>&1');
-        exec(escapeshellcmd($command . ' 2>&1'), $log, $return);
+        if ( $remote ) {
+            exec(escapeshellcmd($command . ' 2>&1'), $log, $return);
+            self::log($command . ' 2>&1');
+        } else {
+            exec(escapeshellcmd($command), $log, $return);
+            self::log($command);
+        }
+
         $log = implode(PHP_EOL, $log);
 
         if (!$return) {

@@ -168,7 +168,7 @@ abstract class AbstractTask
      */
     final protected function runCommandLocal($command, &$output = null)
     {
-        return Console::executeCommand($command, $output);
+        return Console::executeCommand($command, $output, false);
     }
 
     /**

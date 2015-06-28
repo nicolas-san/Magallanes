@@ -54,6 +54,7 @@ class RsyncLocalTask extends BaseStrategyTaskAbstract implements IsReleaseAware
         $excludes = $this->getExcludes();
         $excludesListFilePath = $this->getConfig()->deployment('excludes_file', '');
 
+        $output = null;
         // If we are working with releases
         $deployToDirectory = $this->getConfig()->deployment('to');
         if ($this->getConfig()->release('enabled', false) === true) {
@@ -73,15 +74,15 @@ class RsyncLocalTask extends BaseStrategyTaskAbstract implements IsReleaseAware
                 // rsync: { copy: yes }
                 $rsync_copy = $this->getConfig()->deployment('rsync-local');
                 // If copy_tool_rsync, use rsync rather than cp for finer control of what is copied
-                if ($rsync_copy && is_array($rsync_copy) && $rsync_copy['copy'] && $this->runCommandLocal('test -d ' . $releasesDirectory . '/' . $currentRelease)) {
+                if ($rsync_copy && is_array($rsync_copy) && $rsync_copy['copy'] && $this->runCommandLocal('test -d ' . $releasesDirectory . '/' . $currentRelease, $output)) {
                     if (isset($rsync_copy['copy_tool_rsync'])) {
                         $this->runCommandLocal("rsync -a {$this->excludes(array_merge($excludes, $rsync_copy['rsync_excludes']))} "
-                                          . "$releasesDirectory/$currentRelease/ $releasesDirectory/{$this->getConfig()->getReleaseId()}");
+                                          . "$releasesDirectory/$currentRelease/ $releasesDirectory/{$this->getConfig()->getReleaseId()}", $output);
                     } else {
-                        $this->runCommandLocal('cp -R ' . $releasesDirectory . '/' . $currentRelease . ' ' . $releasesDirectory . '/' . $this->getConfig()->getReleaseId());
+                        $this->runCommandLocal('cp -R ' . $releasesDirectory . '/' . $currentRelease . ' ' . $releasesDirectory . '/' . $this->getConfig()->getReleaseId(), $output);
                     }
                 } else {
-                    $this->runCommandLocal('mkdir -p ' . $releasesDirectory . '/' . $this->getConfig()->getReleaseId());
+                    $this->runCommandLocal('mkdir -p ' . $releasesDirectory . '/' . $this->getConfig()->getReleaseId(), $output);
                 }
             }
         }
@@ -100,7 +101,7 @@ class RsyncLocalTask extends BaseStrategyTaskAbstract implements IsReleaseAware
                  . $this->getConfig()->deployment('from') . ' '
                  . $this->excludesListFile($excludesListFilePath) . ' ' .$deployToDirectory;
 
-        $result = $this->runCommandLocal($command);
+        $result = $this->runCommandLocal($command, $output);
 
         return $result;
     }
